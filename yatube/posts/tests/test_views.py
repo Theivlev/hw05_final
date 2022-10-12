@@ -121,7 +121,7 @@ class ViewsTest(TestCase):
         self.assertEqual(len(response.context['page_obj']), number_of_posts)
 
     def test_checking_when_creating_post(self):
-        '''если при создании поста указать группу, 
+        '''если при создании поста указать группу,
         то этот пост появляется на главной, странице сайта,
         на странице выбранной группы, в профайле пользователя'''
         self.user = User.objects.create(username='auth_test_check')
@@ -155,7 +155,7 @@ class ViewsTest(TestCase):
 
     def test_follow(self):
         """Авторизованный пользователь может подписываться
-            на других пользователей и удалять их из подписок."""    
+            на других пользователей и удалять их из подписок."""
         self.user = User.objects.create(username='Подписчик')
         self.author_following = User.objects.create(username='Автор')
         self.test_group_follow = Group.objects.create(

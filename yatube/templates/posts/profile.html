@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load thumbnail %}
+{% block title%}
+ Профайл пользователя {{ user }}
+{% endblock title%}
+{% block content %}
+      <div class="mb-5">        
+        <h1>Все посты пользователя {{ user }} </h1>
+        <h3>Всего постов: {{count_posts}} </h3>
+        {% include 'includes/subscription.html' %}
+        <article>
+          {% for post in page_obj %}
+            {% include 'includes/post_card.html' %}
+              <a href="{% url 'posts:profile' post.author.username %}">все посты пользователя</a>
+              <br><a href="{% url 'posts:post_detail' post.id %}">подробная информация </a>
+        </article>
+        {% if post.group %}     
+        <a href="{% url 'posts:group_list' post.group.slug %}">все записи группы</a>        
+        <hr>
+        {% endif %}
+        {% endfor %}
+        {% if not forloop.last %}<hr>{% endif %}
+        {% include 'includes/paginator.html' %}  
+      </div>
+{% endblock content%}

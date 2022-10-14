@@ -3,15 +3,16 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.cache import cache_page
 from django.views.generic.base import TemplateView
 
+from constants.constants import Constants
 from .forms import PostForm, CommentForm
 from .models import Follow, Group, Post, User
 from .utilits import get_pages_paginator
 
 
-@cache_page(20, key_prefix='index_page')
+@cache_page(Constants.cache_clearing_time, key_prefix='index_page')
 def index(request):
     posts = Post.objects.select_related('group')
-    page_obj = get_pages_paginator(request, posts, Post.OUTPUT_OF_POSTS)
+    page_obj = get_pages_paginator(request, posts, Constants.OUTPUT_OF_POSTS)
     context = {
         'posts': posts,
         'title': 'Последние обновления на сайте',
@@ -23,8 +24,8 @@ def index(request):
 
 def group_posts(request, slug):
     group = get_object_or_404(Group, slug=slug)
-    posts = group.posts.all()[:Post.OUTPUT_OF_POSTS]
-    page_obj = get_pages_paginator(request, posts, Post.OUTPUT_OF_POSTS)
+    posts = group.posts.all()[:Constants.OUTPUT_OF_POSTS]
+    page_obj = get_pages_paginator(request, posts, Constants.OUTPUT_OF_POSTS)
     context = {
         'group': group,
         'posts': posts,
@@ -46,17 +47,14 @@ def profile(request, username):
         user=subscriber,
         author=author
     )
-    count_posts = profile_list.count()
-    page_obj = get_pages_paginator(request, profile_list, Post.OUTPUT_OF_POSTS)
+    page_obj = get_pages_paginator(
+        request, profile_list, Constants.OUTPUT_OF_POSTS)
     context = {
         'author': author,
         'profile_list': profile_list,
-        'count_posts': count_posts,
         'page_obj': page_obj,
         'following': following
-
     }
-
     return render(request, template, context)
 
 
@@ -70,7 +68,6 @@ def post_detail(request, post_id):
         'form': form,
         'comments': comment,
     }
-
     return render(request, template, context)
 
 
@@ -134,7 +131,7 @@ def follow_index(request):
     subscriber = request.user
     follow_author = Post.objects.filter(author__following__user=subscriber)
     page_obj = get_pages_paginator(
-        request, follow_author, Post.OUTPUT_OF_POSTS)
+        request, follow_author, Constants.OUTPUT_OF_POSTS)
     context = {
         'page_obj': page_obj
     }
@@ -145,13 +142,8 @@ def follow_index(request):
 def profile_follow(request, username):
     user = request.user
     author = get_object_or_404(User, username=username)
-    if user != author and not Follow.objects.filter(
-        user=user, author=author
-    ).exists():
-        Follow.objects.create(
-            user=user,
-            author=author,
-        )
+    if author != user:
+        Follow.objects.get_or_create(user=user, author=author)
     return redirect('posts:follow_index')
 
 

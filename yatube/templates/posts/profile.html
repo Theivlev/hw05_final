@@ -6,7 +6,7 @@
 {% block content %}
       <div class="mb-5">        
         <h1>Все посты пользователя {{ user }} </h1>
-        <h3>Всего постов: {{count_posts}} </h3>
+        <h3>Всего постов: {{author.posts.count}} </h3>
         {% include 'includes/subscription.html' %}
         <article>
           {% for post in page_obj %}

@@ -1,6 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 
+from constants.constants import Constants
 from ..models import Group, Post
 
 User = get_user_model()
@@ -29,7 +30,7 @@ class PostModelTest(TestCase):
                          'работает неверно')
         post = PostModelTest.post
         test_text = str(post)
-        self.assertEqual(test_text, post.text[:Post.SUMBOLS_MAX],
+        self.assertEqual(test_text, post.text[:Constants.SUMBOLS_MAX],
                          'метод __str__ у поста работает неверно')
 
     def test_title_label(self):

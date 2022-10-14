@@ -4,6 +4,7 @@ import shutil
 
 from django.test import Client, TestCase, override_settings
 from django.conf import settings
+from django.core.cache import cache
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.urls import reverse
 
@@ -38,6 +39,7 @@ class FormTest(TestCase):
         self.authorized_client.force_login(FormTest.user)
         self.authorized_client_2 = Client()
         self.authorized_client_2.force_login(FormTest.user_2)
+        cache.clear()
 
     def test_create_post(self):
         """при создания поста создаётся новая запись в базе данных"""

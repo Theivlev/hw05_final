@@ -1,12 +1,12 @@
 from django.contrib.auth import get_user_model
 from django.db import models
 
+from constants.constants import Constants
 
 User = get_user_model()
 
 
 class Group(models.Model):
-
     title = models.CharField(max_length=200, verbose_name='Заголовок')
     slug = models.SlugField(unique=True, verbose_name='URL')
     description = models.TextField(verbose_name='Описание')
@@ -16,8 +16,6 @@ class Group(models.Model):
 
 
 class Post(models.Model):
-    OUTPUT_OF_POSTS: int = 10
-    SUMBOLS_MAX: int = 15
 
     text = models.TextField(
         verbose_name='Текст',
@@ -49,7 +47,7 @@ class Post(models.Model):
     )
 
     def __str__(self):
-        return self.text[:Post.SUMBOLS_MAX]
+        return self.text[:Constants.SUMBOLS_MAX]
 
     class Meta:
         ordering = ('-pub_date', '-pk')
@@ -74,6 +72,12 @@ class Comment(models.Model):
         verbose_name='Дата публикации',
     )
 
+    def __str__(self):
+        return self.text[:Constants.SUMBOLS_MAX]
+
+    class Meta:
+        ordering = ['-created']
+
 
 class Follow(models.Model):
     user = models.ForeignKey(
@@ -88,3 +92,11 @@ class Follow(models.Model):
         verbose_name='Подписка на автора',
         on_delete=models.CASCADE
     )
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["user", "author"], name="unique_user_author")]
+
+    def __str__(self):
+        return f'Подписчик: {self.user}, Автор: {self.author}'

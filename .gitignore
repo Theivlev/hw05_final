@@ -144,9 +144,10 @@ dmypy.json
 .history/
 
 .mypy_cache
-
+.bash.exe.stackdump
 # папки со статикой и медиа
 static/
 yatube/posts/static/
 yatube/media/
+
 

@@ -76,7 +76,7 @@ class Comment(models.Model):
         return self.text[:Constants.SUMBOLS_MAX]
 
     class Meta:
-        ordering = ['-created']
+        ordering = ('-created',)
 
 
 class Follow(models.Model):

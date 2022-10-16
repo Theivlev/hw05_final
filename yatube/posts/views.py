@@ -9,7 +9,7 @@ from .models import Follow, Group, Post, User
 from .utilits import get_pages_paginator
 
 
-@cache_page(Constants.cache_clearing_time, key_prefix='index_page')
+@cache_page(Constants.CACHE_CLEARING_TIME, key_prefix='index_page')
 def index(request):
     posts = Post.objects.select_related('group')
     page_obj = get_pages_paginator(request, posts, Constants.OUTPUT_OF_POSTS)
